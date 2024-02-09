@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cayley Lee - Week 4 Leaflet Map with GeoJSON</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+</head>
+
+<body>
+
+  <div id="map" style="width: 700px; height: 500px"></div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <!--Mapbox stylesheet-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+  <!--Data-->
+  <script src="PPR_Program_Sites.geojson"></script>
+
+  <script>
+
+    var map = L.map('map').setView([40, -75.1], 11);
+
+    // Mapbox basemap, refer to https://docs.mapbox.com/api/maps/styles/, choose the style and change in id
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+  maxZoom: 18,
+  id: 'mapbox/light-v11',
+  accessToken: 'pk.eyJ1IjoiY2w2NzgiLCJhIjoiY2xvN3J2ZjEwMDd0MDJzbDQ2aXduZDJ2ciJ9.4pZIijWcn6wRXer9fWs0bA'
+}).addTo(map);
+
+    // L.geoJSON: Creates a GeoJSON layer, display on the map (you can alternatively add it later with addData method) and an options object.
+    // pointToLayer: 	A Function defining how GeoJSON points spawn Leaflet layers. It is internally called when data is added, passing the GeoJSON point feature and its LatLng. The default is to spawn a default Marker(here is circle marker)
+    // L.circleMaker: Instantiates a circle marker object given a geographical point, and an optional options object.
+    var worldPlaces = L.geoJson(places, {
+        pointToLayer: function(feature,latlng) {
+              console.log(feature.properties)
+              return L.circleMarker(latlng, {
+                radius: 2, 
+                color: 'green',
+              });   
+          },
+
+        // filter: A Function that will be used to decide whether to include a feature or not. The default is to include all features
+        // filter return booleans : true/false
+         filter: function(features, layer){
+              if(features.properties.PARK_NAME === 'Frank Glavin Playground'){
+                  return true
+                            }
+          } 
+
+    }).addTo(map)
+
+  </script>
+
+</body>
+</html>
+
